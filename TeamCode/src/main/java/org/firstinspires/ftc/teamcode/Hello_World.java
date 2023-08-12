@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+
 
 @TeleOp(name="Hello World",group="Robot")
 public class Hello_World extends LinearOpMode {
@@ -34,6 +36,8 @@ public class Hello_World extends LinearOpMode {
         Claw=hardwareMap.get(Servo.class,"Servo1");
 
         liftMotor = hardwareMap.get(DcMotor.class,"MotorC");
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         double leftSpeed;
         double rightSpeed;
@@ -41,6 +45,8 @@ public class Hello_World extends LinearOpMode {
         double liftSpeed;
 
         waitForStart();
+
+
         while (opModeIsActive()) {
             if (gamepad1.b) {
                 telemetry.addData("gamepad1.b", gamepad1.b);
@@ -48,14 +54,24 @@ public class Hello_World extends LinearOpMode {
 
             telemetry.addData("gamepad1.left_stick_y", gamepad1.left_stick_y);
             leftMotor.setPower(gamepad1.left_stick_y);
+            rightMotor.setPower(gamepad1.left_stick_y);
 
-            telemetry.addData("gamepad1.right_stick_y", gamepad1.right_stick_y);
-            rightMotor.setPower(gamepad1.right_stick_y);
+            telemetry.addData("gamepad1.right_stick_x", gamepad1.right_stick_x);
+            leftMotor.setPower(gamepad1.left_stick_x);
+            rightMotor.setPower(gamepad1.left_stick_x);
 
 
-            liftMotor.setPower(gamepad1.left_trigger * -1 );
-            liftMotor.setPower(gamepad1.right_trigger);
-
+            if (gamepad1.right_trigger>=0.4) {
+                liftMotor.setPower(gamepad1.right_trigger);
+                telemetry.addData("liftMotor.getCurrentPosition",liftMotor.getCurrentPosition());
+            }
+            else if (gamepad1.left_trigger>=0.4) {
+                liftMotor.setPower(gamepad1.left_trigger * -1);
+                telemetry.addData("liftMotor.getCurrentPosition",liftMotor.getCurrentPosition());
+            }
+            else {
+                liftMotor.setPower(0);
+            }
             if (gamepad1.right_bumper&&gamepad1.left_bumper){
                 telemetry.addLine("Claw Opened");
                 clawPosition=0.3;
