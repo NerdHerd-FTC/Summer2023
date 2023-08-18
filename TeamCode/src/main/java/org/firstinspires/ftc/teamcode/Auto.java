@@ -50,7 +50,7 @@ public class Auto extends LinearOpMode{
         waitForStart();
         forward(.5,10);
         turn(90,.5);
-        lift(.3,5);
+        lift(.5,6);
     }
 
 

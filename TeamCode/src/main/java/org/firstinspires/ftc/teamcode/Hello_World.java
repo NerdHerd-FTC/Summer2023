@@ -83,6 +83,14 @@ public class Hello_World extends LinearOpMode {
                 clawPosition=0.7;
                 Claw.setPosition(clawPosition);
             }
+
+            if (gamepad1.a){
+                liftMotor.setTargetPosition(100);
+                liftMotor.setPower(0.5);
+
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+
             telemetry.update();
             sleep(50);
 
