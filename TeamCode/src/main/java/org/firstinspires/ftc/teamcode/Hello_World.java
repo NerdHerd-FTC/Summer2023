@@ -89,8 +89,7 @@ public class Hello_World extends LinearOpMode {
                 liftMotor.setPower(0.5);
 
                 liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                while (liftMotor.isBusy()){
-
+                while (opModeIsActive() && (liftMotor.isBusy())){
                 }
                 liftMotor.setPower(0);
                 liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
