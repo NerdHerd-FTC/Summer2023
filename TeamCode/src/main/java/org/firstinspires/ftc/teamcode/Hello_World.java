@@ -94,17 +94,18 @@ public class Hello_World extends LinearOpMode {
 
                 liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
-            if (macro == 1 && targetPosition == liftMotor.getCurrentPosition()) {
+            if (macro == 1 && (Math.abs(liftMotor.getCurrentPosition()-targetPosition))<=10) {
                 liftMotor.setPower(0);
                 liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 macro = 0;
             }
 
+            telemetry.addData("Ticks",liftMotor.getCurrentPosition());
 
             telemetry.update();
             sleep(50);
 
         }
     }
-}    
+}
 
