@@ -16,13 +16,15 @@ public class Hello_World extends LinearOpMode {
 
     public DcMotor liftMotor = null;
 
-    public Servo Claw=null;
+
+    public Servo Claw = null;
+
     @Override
     public void runOpMode() {
         telemetry.addLine("Hello World");
         telemetry.update();
         leftMotor = hardwareMap.get(DcMotor.class, "MotorA");
-        rightMotor = hardwareMap.get(DcMotor.class,"MotorB");
+        rightMotor = hardwareMap.get(DcMotor.class, "MotorB");
 
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -33,16 +35,19 @@ public class Hello_World extends LinearOpMode {
         leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        Claw=hardwareMap.get(Servo.class,"Servo1");
+        Claw = hardwareMap.get(Servo.class, "Servo1");
 
-        liftMotor = hardwareMap.get(DcMotor.class,"MotorC");
+        liftMotor = hardwareMap.get(DcMotor.class, "MotorC");
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         double leftSpeed;
         double rightSpeed;
-        double clawPosition=0;
+        double clawPosition = 0;
         double liftSpeed;
+        double macro = 0;
+        int targetPosition = 0;
+
 
         waitForStart();
 
@@ -61,42 +66,39 @@ public class Hello_World extends LinearOpMode {
             rightMotor.setPower(gamepad1.left_stick_x);
 
 
-            if (gamepad1.right_trigger>=0.4) {
+            if (gamepad1.right_trigger >= 0.4) {
                 liftMotor.setPower(gamepad1.right_trigger);
-                telemetry.addData("liftMotor.getCurrentPosition",liftMotor.getCurrentPosition());
-            }
-            else if (gamepad1.left_trigger>=0.4) {
+                telemetry.addData("liftMotor.getCurrentPosition", liftMotor.getCurrentPosition());
+            } else if (gamepad1.left_trigger >= 0.4) {
                 liftMotor.setPower(gamepad1.left_trigger * -1);
-                telemetry.addData("liftMotor.getCurrentPosition",liftMotor.getCurrentPosition());
-            }
-            else {
+                telemetry.addData("liftMotor.getCurrentPosition", liftMotor.getCurrentPosition());
+            } else {
                 liftMotor.setPower(0);
             }
-            if (gamepad1.right_bumper&&gamepad1.left_bumper){
+            if (gamepad1.right_bumper && gamepad1.left_bumper) {
                 telemetry.addLine("Claw Opened");
-                clawPosition=0.3;
+                clawPosition = 0.3;
                 Claw.setPosition(clawPosition);
-            }
-            else if  (gamepad1.right_bumper||gamepad1.left_bumper){
+            } else if (gamepad1.right_bumper || gamepad1.left_bumper) {
                 //don't need    telemetry.addData("gamepad1.right_bumper",gamepad1.right_bumper);
                 telemetry.addLine("claw closed");
-                clawPosition=0.7;
+                clawPosition = 0.7;
                 Claw.setPosition(clawPosition);
             }
 
-            if (gamepad1.a){
-                liftMotor.setTargetPosition(110);
+            if (gamepad1.a) {
+                targetPosition = 100;
+                macro = 1;
+                liftMotor.setTargetPosition(targetPosition);
                 liftMotor.setPower(0.5);
 
                 liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                if (liftMotor.getCurrentPosition()>=100){
-                    liftMotor.setPower(0);
-                    liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                }
-
-
             }
-
+            if (macro == 1 && targetPosition == liftMotor.getCurrentPosition()) {
+                liftMotor.setPower(0);
+                liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                macro = 0;
+            }
 
 
             telemetry.update();
@@ -104,4 +106,5 @@ public class Hello_World extends LinearOpMode {
 
         }
     }
-}
+}    
+
