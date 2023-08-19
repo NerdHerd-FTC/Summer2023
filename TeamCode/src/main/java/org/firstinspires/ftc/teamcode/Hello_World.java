@@ -85,14 +85,16 @@ public class Hello_World extends LinearOpMode {
             }
 
             if (gamepad1.a){
-                liftMotor.setTargetPosition(100);
+                liftMotor.setTargetPosition(110);
                 liftMotor.setPower(0.5);
 
                 liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                while (opModeIsActive() && (liftMotor.isBusy())){
+                if (liftMotor.getCurrentPosition()>=100){
+                    liftMotor.setPower(0);
+                    liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 }
-                liftMotor.setPower(0);
-                liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
             }
 
 
