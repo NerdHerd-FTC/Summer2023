@@ -95,10 +95,13 @@ public class HelloWorldWithMovementPriyanshu extends LinearOpMode {
                 rightMotor.setPower(-0.6);
                 leftMotor.setPower(-0.6);
             }
+            //movement with turning left and right
+            //turning left
             if(gamepad1.left_stick_x>0.4){
                 rightMotor.setPower(1);
                 leftMotor.setPower(-1);
             }
+            //turning right
             if(gamepad1.left_stick_x<-0.4){
                 rightMotor.setPower(-1);
                 leftMotor.setPower(1);
