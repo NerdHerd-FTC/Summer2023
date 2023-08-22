@@ -18,10 +18,10 @@ public class Hello_World extends LinearOpMode {
 
     static final double COUNTS_PER_MOTOR_REV = 28;    //UltraPlanetary Gearbox Kit & HD Hex Motor
     static final double DRIVE_GEAR_REDUCTION = 20;   //gear ratio
-    static final double WHEEL_DIAMETER_INCH = 1.25;    // For figuring circumference: 90mm
+    static final double GEAR_RATIO = 3/5;    // The gear ratio of the gears attached to the motor.
 
     static final double INCHES_PER_DEGREE = (11.0/90);
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (90/30);
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (GEAR_RATIO);
 
     //static final double INCHES_PER_COUNT = (WHEEL_DIAMETER_INCH * 3.1415) / (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION);
     // for testing
@@ -74,11 +74,8 @@ public class Hello_World extends LinearOpMode {
 
             telemetry.addData("gamepad1.left_stick_y", gamepad1.left_stick_y);
             leftMotor.setPower(gamepad1.left_stick_y);
-            rightMotor.setPower(gamepad1.left_stick_y);
-
-            telemetry.addData("gamepad1.right_stick_x", gamepad1.right_stick_x);
-            leftMotor.setPower(gamepad1.left_stick_x);
-            rightMotor.setPower(gamepad1.left_stick_x);
+            telemetry.addData("gamepad1.right_stick_y", gamepad1.right_stick_y);
+            rightMotor.setPower(gamepad1.right_stick_y);
 
 
             if (gamepad1.right_trigger >= 0.4) {
@@ -119,7 +116,7 @@ public class Hello_World extends LinearOpMode {
                 macro = false;
             }
             if (gamepad1.b) {
-                targetPosition = (152);
+                targetPosition = ((int)(23.5*COUNTS_PER_INCH));
                 macro = true;
                 liftMotor.setTargetPosition(targetPosition);
                 liftMotor.setPower(1);
@@ -136,7 +133,7 @@ public class Hello_World extends LinearOpMode {
                 macro = false;
             }
             if (gamepad1.x) {
-                targetPosition = (1000);
+                targetPosition = (0);
                 macro = true;
                 liftMotor.setTargetPosition(targetPosition);
                 liftMotor.setPower(1);
