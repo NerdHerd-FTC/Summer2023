@@ -16,6 +16,18 @@ public class Hello_World extends LinearOpMode {
 
     public DcMotor liftMotor = null;
 
+    static final double COUNTS_PER_MOTOR_REV = 28;    //UltraPlanetary Gearbox Kit & HD Hex Motor
+    static final double DRIVE_GEAR_REDUCTION = 20;   //gear ratio
+    static final double WHEEL_DIAMETER_INCH = 1.25;    // For figuring circumference: 90mm
+
+    static final double INCHES_PER_DEGREE = (11.0/90);
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (90/30);
+
+    //static final double INCHES_PER_COUNT = (WHEEL_DIAMETER_INCH * 3.1415) / (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION);
+    // for testing
+
+
+
 
     public Servo Claw = null;
 
@@ -40,16 +52,19 @@ public class Hello_World extends LinearOpMode {
         liftMotor = hardwareMap.get(DcMotor.class, "MotorC");
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor.setDirection(DcMotor.Direction.FORWARD);
+        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         double leftSpeed;
         double rightSpeed;
         double clawPosition = 0;
         double liftSpeed;
-        double macro = 0;
+        boolean macro = false;
         int targetPosition = 0;
 
 
         waitForStart();
+
 
 
         while (opModeIsActive()) {
@@ -72,7 +87,7 @@ public class Hello_World extends LinearOpMode {
             } else if (gamepad1.left_trigger >= 0.4) {
                 liftMotor.setPower(gamepad1.left_trigger * -1);
                 telemetry.addData("liftMotor.getCurrentPosition", liftMotor.getCurrentPosition());
-            } else {
+            } else if (!macro) {
                 liftMotor.setPower(0);
             }
             if (gamepad1.right_bumper && gamepad1.left_bumper) {
@@ -87,26 +102,60 @@ public class Hello_World extends LinearOpMode {
             }
 
             if (gamepad1.a) {
-                targetPosition = 100;
-                macro = 1;
+                targetPosition = (int) (13.5*COUNTS_PER_INCH);
+                macro = true;
                 liftMotor.setTargetPosition(targetPosition);
-                liftMotor.setPower(0.5);
+                liftMotor.setPower(1);
 
                 liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
-            if (macro == 1 && (Math.abs(liftMotor.getCurrentPosition()-targetPosition))>=10) {
-                liftMotor.setTargetPosition(targetPosition);
-                liftMotor.setPower(0.5);
-
-                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            if (macro && (Math.abs(liftMotor.getCurrentPosition()-targetPosition))>=10) {
+                telemetry.addLine("Macro Running!");
+                telemetry.addData("Ticks remaining", liftMotor.getCurrentPosition()-targetPosition);
             }
-            else if (macro == 1 && (Math.abs(liftMotor.getCurrentPosition()-targetPosition))<=10) {
+            else if (macro && (Math.abs(liftMotor.getCurrentPosition()-targetPosition))<=10) {
                 liftMotor.setPower(0);
                 liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                macro = 0;
+                macro = false;
+            }
+            if (gamepad1.b) {
+                targetPosition = (152);
+                macro = true;
+                liftMotor.setTargetPosition(targetPosition);
+                liftMotor.setPower(1);
+
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+            if (macro && (Math.abs(liftMotor.getCurrentPosition()-targetPosition))>=10) {
+                telemetry.addLine("Macro Running!");
+                telemetry.addData("Ticks remaining", liftMotor.getCurrentPosition()-targetPosition);
+            }
+            else if (macro && (Math.abs(liftMotor.getCurrentPosition()-targetPosition))<=10) {
+                liftMotor.setPower(0);
+                liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                macro = false;
+            }
+            if (gamepad1.x) {
+                targetPosition = (1000);
+                macro = true;
+                liftMotor.setTargetPosition(targetPosition);
+                liftMotor.setPower(1);
+
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+            if (macro && (Math.abs(liftMotor.getCurrentPosition()-targetPosition))>=10) {
+                telemetry.addLine("Macro Running!");
+                telemetry.addData("Ticks remaining", liftMotor.getCurrentPosition()-targetPosition);
+            }
+            else if (macro && (Math.abs(liftMotor.getCurrentPosition()-targetPosition))<=10) {
+                liftMotor.setPower(0);
+                liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                macro = false;
             }
 
+
             telemetry.addData("Ticks",liftMotor.getCurrentPosition());
+            telemetry.addData("Macro Enabled", macro);
 
             telemetry.update();
             sleep(50);
