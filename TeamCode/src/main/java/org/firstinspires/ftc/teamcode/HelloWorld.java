@@ -17,7 +17,7 @@ public class HelloWorld extends LinearOpMode {
         while (opModeIsActive()) {
             count++;
             telemetry.addLine("I don't know what I'm doing");
-            telemetry.addLine("I know what I'm doing now")
+            telemetry.addLine("I know what I'm doing now");
             telemetry.update();
             sleep(100);
         }
